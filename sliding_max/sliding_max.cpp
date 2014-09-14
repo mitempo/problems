@@ -1,4 +1,8 @@
-#include <iostream>
+// Problem:
+//   Given a sequence of N elements, find the maximum value for each window of K elements.
+// Constraints:
+//   O(N) in time.
+
 #include <deque>
 #include <vector>
 #include <utility>
