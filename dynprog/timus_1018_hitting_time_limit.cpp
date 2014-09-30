@@ -86,7 +86,7 @@ int main()
             uint weight = p.second.second;
 
             if (s.size() != i + 1) continue;
-            
+
             for (auto c : f)
             {
                 subtree deeper_subtree{ s };
@@ -100,6 +100,8 @@ int main()
             }
         }
     }
+
+    // Find the maximum-weight subtree with q branches.
 
     uint max_weight = numeric_limits<uint>::min();
 
