@@ -1,4 +1,5 @@
 // Solution for http://acm.timus.ru/problem.aspx?space=1&num=1018
+// Without calculating the number of nodes in the subtrees
 
 #include <iostream>
 #include <utility>
@@ -29,7 +30,6 @@ class solver
     v<int> _bweights;
 
     v<int> _sweights;                         // Memoized weights of subtrees with a given root
-    v<int> _ssizes;                           // Memoized number of nodes in subtrees with a given root
     map<pair<int, uint>, int> _cut_sweights;  // Memoized weights of subtrees with a given root and a given number of branches cut
 
 public:
@@ -37,7 +37,6 @@ public:
         _n(branches.size() + 1),
         _children(_n),
         _bweights(_n),
-        _ssizes(_n, -1),
         _sweights(_n, -1)
     {
         // Transform the tree into a more comfortable representation
@@ -81,15 +80,6 @@ public:
                                                                                             get_subtree_weight(_children[sroot][1])));
     }
 
-    // Calculates number of nodes in a subtree with a given root
-    uint get_subtree_size(int sroot)
-    {
-        return _ssizes[sroot] != -1 ? _ssizes[sroot] :
-                                      (_ssizes[sroot] = 1 +
-                                                        (_children[sroot].empty() ? 0 : get_subtree_size(_children[sroot][0]) +
-                                                                                        get_subtree_size(_children[sroot][1])));
-    }
-
     uint max_cut_of_subtree(int sroot, uint n_to_cut)
     {
         auto key = make_pair(sroot, n_to_cut);
@@ -99,13 +89,10 @@ public:
         if (n_to_cut == 0)
             return _cut_sweights.insert(p, make_pair(key, get_subtree_weight(sroot)))->second;
 
-        if (get_subtree_size(sroot) < n_to_cut)
-            return _cut_sweights.insert(p, make_pair(key, NaN))->second;
+        if (_children[sroot].empty())
+            return _cut_sweights.insert(p, make_pair(key, n_to_cut > 1 ? NaN : 0))->second;
 
-        if (get_subtree_size(sroot) == n_to_cut)
-            return _cut_sweights.insert(p, make_pair(key, 0))->second;
-
-        uint max_cut = numeric_limits<uint>::min();
+        uint max_cut = NaN;
 
         for (uint i = 0; i <= n_to_cut; ++i)
         {
@@ -113,8 +100,14 @@ public:
             uint right = max_cut_of_subtree(_children[sroot][1], n_to_cut-i);
 
             uint cut = add_with_nan(add_with_nan(left, right), _bweights[sroot]);
-            if (cut != NaN && cut > max_cut) max_cut = cut;
+            if (cut != NaN && (max_cut == NaN || cut > max_cut)) max_cut = cut;
         }
+
+        if (max_cut == NaN)
+            for (uint i = 0; i <= n_to_cut - 1; ++i)
+                if (max_cut_of_subtree(_children[sroot][0], i) != NaN &&
+                    max_cut_of_subtree(_children[sroot][1], n_to_cut - 1 - i) != NaN)
+                    return _cut_sweights.insert(p, make_pair(key, 0))->second;
 
         return _cut_sweights.insert(p, make_pair(key, max_cut))->second;
     }
