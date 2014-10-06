@@ -117,6 +117,9 @@ public:
     friend big_uint operator*(const big_uint& a, uint8_t b)
     {
         vector<carrier_t> result;
+
+        if (a.data.empty() || b == 0) return result;
+
         result.reserve(a.data.size() + 1);
 
         uint8_t carryover = 0;
