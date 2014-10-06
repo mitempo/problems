@@ -4,6 +4,7 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include <stdexcept>
 
 using namespace std;
 
@@ -55,7 +56,7 @@ private:
         dcarrier_t wide_multiplicand = static_cast<dcarrier_t>(multiplicand);
         dcarrier_t wide_product = wide_multiplicand * multiplier + carryover;
 
-        carryover = wide_product >> 8 * sizeof carrier_t/sizeof uint8_t;
+        carryover = static_cast<uint8_t>(wide_product >> 8 * sizeof(carrier_t)/sizeof(uint8_t));
         return static_cast<carrier_t>(wide_product);
     }
 
@@ -106,7 +107,7 @@ public:
         if (carryover) throw underflow_error("big_uint");
 
         auto new_size = result.size();
-        for (auto i = result.size() - 1; i < numeric_limits<decltype(result)::size_type>::max(); --i)
+        for (auto i = result.size() - 1; i < numeric_limits<typename decltype(result)::size_type>::max(); --i)
             if (result[i] == 0) new_size = i;
 
         result.resize(new_size);
