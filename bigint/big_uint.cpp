@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iostream>
 #include <stdexcept>
+#include <cassert>
 
 using namespace std;
 
@@ -18,15 +19,16 @@ template <> struct double_size_type<uint8_t>  { using type = uint16_t; };
 template <> struct double_size_type<uint16_t> { using type = uint32_t; };
 template <> struct double_size_type<uint32_t> { using type = uint64_t; };
 
-// TODO: For practical use the default TCarrier should be uint32_t. uint8_t is convenient
-// for testing: you don't have to use very large numbers.
 // TODO: For practical use there should be eight overloads for all the arithmetic
 // operators, covering all overloadable pairs of {big_uint&&, const big_uint&, uint}.
-template <typename TCarrier = uint8_t> class big_uint
+template <typename TCarrier = uint32_t> class big_uint
 {
 public:
     using carrier_t = TCarrier;
     using dcarrier_t = typename double_size_type<carrier_t>::type;
+
+    // TODO: Turn into constexpr once supported in MSVC
+    #define carrier_weight (static_cast<dcarrier_t>(numeric_limits<carrier_t>::max()) + 1)
 
 private:
     vector<carrier_t> data;
@@ -37,7 +39,7 @@ private:
         dcarrier_t wide_addend = static_cast<dcarrier_t>(addend);
         dcarrier_t wide_sum = wide_augend + wide_addend + carryover;
 
-        carryover = wide_sum > numeric_limits<carrier_t>::max();
+        carryover = wide_sum >= carrier_weight;
         return static_cast<carrier_t>(wide_sum);
     }
 
@@ -56,7 +58,7 @@ private:
         dcarrier_t wide_multiplicand = static_cast<dcarrier_t>(multiplicand);
         dcarrier_t wide_product = wide_multiplicand * multiplier + carryover;
 
-        carryover = static_cast<carrier_t>(wide_product / (static_cast<dcarrier_t>(numeric_limits<carrier_t>::max()) + 1));
+        carryover = static_cast<carrier_t>(wide_product / carrier_weight);
         return static_cast<carrier_t>(wide_product);
     }
 
@@ -70,8 +72,8 @@ public:
     {
         while (value > 0)
         {
-            data.push_back(value % (static_cast<dcarrier_t>(numeric_limits<carrier_t>::max()) + 1));
-            value /= static_cast<dcarrier_t>(numeric_limits<carrier_t>::max()) + 1;
+            data.push_back(value % carrier_weight);
+            value /= carrier_weight;
         }
     }
 
@@ -107,10 +109,10 @@ public:
         if (carryover) throw underflow_error("big_uint");
 
         auto new_size = result.size();
-        for (auto i = result.size() - 1; i < numeric_limits<typename decltype(result)::size_type>::max(); --i)
-            if (result[i] == 0) new_size = i;
+        while (new_size > 0 && result[new_size-1] == 0)
+            --new_size;
 
-        result.resize(new_size);
+        if (new_size < result.size()) result.resize(new_size);
         return result;
     }
 
@@ -141,7 +143,7 @@ public:
             carrier_t carryover = *p;
             for (auto& digit : decimal_digits)
             {
-                dcarrier_t value = static_cast<dcarrier_t>(digit * (numeric_limits<carrier_t>::max()+1) + carryover);
+                dcarrier_t value = static_cast<dcarrier_t>(digit * carrier_weight + carryover);
                 digit = static_cast<decdigit_t>(value % 10);
                 carryover = static_cast<carrier_t>(value / 10);
             }
@@ -165,6 +167,23 @@ public:
 
 int main()
 {
-    auto c = big_uint<>(0) - big_uint<>(0) + big_uint<>(2000) + big_uint<>(1000) - big_uint<>(500) + big_uint<>(0) - big_uint<>(0) + big_uint<>(1);
-    cout << (c * 100).to_string().c_str();
+    auto a1 = big_uint<>(4000000000) - big_uint<>(4000000000);
+    auto a2 = a1 + big_uint<>(4000000000);
+    auto a3 = a2 + big_uint<>(4000000000);
+    auto a4 = a3 - big_uint<>(2000000000);
+    auto a5 = a4 + big_uint<>(0);
+    auto a6 = a5 - big_uint<>(0);
+    auto a7 = a6 + big_uint<>(1);
+    auto a8 = a7 * 100;
+
+    assert(a1.to_string() == "0");
+    assert(a2.to_string() == "4000000000");
+    assert(a3.to_string() == "8000000000");
+    assert(a4.to_string() == "6000000000");
+    assert(a5.to_string() == "6000000000");
+    assert(a6.to_string() == "6000000000");
+    assert(a7.to_string() == "6000000001");
+    assert(a8.to_string() == "600000000100");
+
+    cout << "Success!";
 }
