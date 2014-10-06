@@ -50,6 +50,15 @@ private:
         return static_cast<carrier_t>(wide_difference);
     }
 
+    static carrier_t multiply_with_carryover(carrier_t multiplicand, uint8_t multiplier, uint8_t& carryover)
+    {
+        dcarrier_t wide_multiplicand = static_cast<dcarrier_t>(multiplicand);
+        dcarrier_t wide_product = wide_multiplicand * multiplier + carryover;
+
+        carryover = wide_product >> 8 * sizeof carrier_t/sizeof uint8_t;
+        return static_cast<carrier_t>(wide_product);
+    }
+
     big_uint(vector<carrier_t> raw_data)
     {
         data = raw_data;
@@ -104,6 +113,19 @@ public:
         return result;
     }
 
+    friend big_uint operator*(const big_uint& a, uint8_t b)
+    {
+        vector<carrier_t> result;
+        result.reserve(a.data.size() + 1);
+
+        uint8_t carryover = 0;
+        for (int i = 0; i < a.data.size(); ++i)
+            result.push_back(multiply_with_carryover(a.data[i], b, carryover));
+
+        if (carryover) result.push_back(carryover);
+        return result;
+    }
+
     string to_string()
     {
         using decdigit_t = int;   // Integral type to represent a decimal digit
@@ -115,7 +137,7 @@ public:
             carrier_t carryover = *p;
             for (auto& digit : decimal_digits)
             {
-                dcarrier_t value = digit * static_cast<dcarrier_t>(numeric_limits<carrier_t>::max()+1) + carryover;
+                dcarrier_t value = static_cast<dcarrier_t>(digit * (numeric_limits<carrier_t>::max()+1) + carryover);
                 digit = static_cast<decdigit_t>(value % 10);
                 carryover = static_cast<carrier_t>(value / 10);
             }
@@ -131,7 +153,7 @@ public:
         s.reserve(decimal_digits.size());
 
         for (auto p = decimal_digits.rbegin(); p != decimal_digits.rend(); ++p)
-            s.push_back(*p + '0');
+            s.push_back(static_cast<char>(*p + '0'));
 
         return s;
     }
@@ -140,5 +162,5 @@ public:
 int main()
 {
     auto c = big_uint<>(0) - big_uint<>(0) + big_uint<>(2000) + big_uint<>(1000) - big_uint<>(500) + big_uint<>(0) - big_uint<>(0) + big_uint<>(1);
-    cout << c.to_string().c_str();
+    cout << (c * 100).to_string().c_str();
 }
