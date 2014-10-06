@@ -18,7 +18,7 @@ template <> struct double_size_type<uint8_t>  { using type = uint16_t; };
 template <> struct double_size_type<uint16_t> { using type = uint32_t; };
 template <> struct double_size_type<uint32_t> { using type = uint64_t; };
 
-// TODO: For practical use the default should be uint32_t. uint8_t is convenient
+// TODO: For practical use the default TCarrier should be uint32_t. uint8_t is convenient
 // for testing: you don't have to use very large numbers.
 // TODO: For practical use there should be eight overloads for all the arithmetic
 // operators, covering all overloadable pairs of {big_uint&&, const big_uint&, uint}.
@@ -51,12 +51,12 @@ private:
         return static_cast<carrier_t>(wide_difference);
     }
 
-    static carrier_t multiply_with_carryover(carrier_t multiplicand, uint8_t multiplier, uint8_t& carryover)
+    static carrier_t multiply_with_carryover(carrier_t multiplicand, carrier_t multiplier, carrier_t& carryover)
     {
         dcarrier_t wide_multiplicand = static_cast<dcarrier_t>(multiplicand);
         dcarrier_t wide_product = wide_multiplicand * multiplier + carryover;
 
-        carryover = static_cast<uint8_t>(wide_product >> 8 * sizeof(carrier_t)/sizeof(uint8_t));
+        carryover = static_cast<carrier_t>(wide_product / (static_cast<dcarrier_t>(numeric_limits<carrier_t>::max()) + 1));
         return static_cast<carrier_t>(wide_product);
     }
 
@@ -114,7 +114,7 @@ public:
         return result;
     }
 
-    friend big_uint operator*(const big_uint& a, uint8_t b)
+    friend big_uint operator*(const big_uint& a, carrier_t b)
     {
         vector<carrier_t> result;
 
@@ -122,7 +122,7 @@ public:
 
         result.reserve(a.data.size() + 1);
 
-        uint8_t carryover = 0;
+        carrier_t carryover = 0;
         for (int i = 0; i < a.data.size(); ++i)
             result.push_back(multiply_with_carryover(a.data[i], b, carryover));
 
