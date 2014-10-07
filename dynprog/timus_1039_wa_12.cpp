@@ -1,4 +1,4 @@
-// Draft solution for http://acm.timus.ru/problem.aspx?space=1&num=1018
+// Draft solution for http://acm.timus.ru/problem.aspx?space=1&num=1039
 // Wrong answer #12
 
 #include <algorithm>
