@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <limits>
 #include <vector>
 
 using namespace std;
@@ -24,17 +25,11 @@ int main()
 
     for (int i = 2; i <= n; ++i)
     {
-        if (find(squares.cbegin(), squares.cend(), i) != squares.end())
-        {
-            cache.push_back(1);
-            continue;
-        }
-
         long min = numeric_limits<long>::max();
 
-        for (int j = 1; j < squares.size() && squares[j] < i; ++j)
+        for (int j = 1; j < squares.size() && squares[j] <= i; ++j)
         {
-            long val = cache[squares[j]] + cache[i-squares[j]];
+            long val = squares[j] == i ? 1 : cache[squares[j]] + cache[i-squares[j]];
             if (val < min) min = val;
         }
 
