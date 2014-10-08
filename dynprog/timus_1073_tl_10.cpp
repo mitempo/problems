@@ -12,7 +12,7 @@ int main()
     int n;
     cin >> n;
 
-    set<long> squares;
+    vector<long> squares;
 
     for (int i = 1; i*i <= n; ++i)
         squares.push_back(i*i);
