@@ -26,58 +26,55 @@ int main()
 
         cin >> start >> end;
 
-        assert(start < end); // This is not explicitly stated in the problem, but let's try
-        segments.push_back({ start, end });
+        if (start > end) swap(start, end); // Just in case
+        segments.push_back({start, end});
     }
 
-    map<pair<int, bool>, set<int>> index; // Maps a {coordinate, is_start} to numbers of all the segments
-                                          // starting (if the flag is true) or ending (if the flag is false)
-                                          // at that coordinate
+    map<pair<int, bool>, set<int>> index; // Maps a {coordinate, is_end} to numbers of all the segments
+                                          // starting (if the flag is false) or ending (if the flag is true)
+                                          // at that coordinate. NB: It's important that false < true.
 
     for (int i = 0; i < segments.size(); ++i)
     {
-        index[{segments[i].first, true}].insert(i);
-        index[{segments[i].second, false}].insert(i);
+        index[{segments[i].first, false}].insert(i);
+        index[{segments[i].second, true}].insert(i);
     }
 
     vector<unsigned> deepest_child_depth(n);
     vector<int> deepest_child(n, -1);
-    vector<set<int>> candidates(n);
+    vector<set<int>> parent_candidates(n);
+    set<int> active;
 
-    for (auto p = next(begin(index)); p != end(index); ++p)
+    for (const auto& e : index)
     {
-        if (p->first.second)
+        if (!e.first.second) // An entry with e.second containing the list of segments starting at e.first.first
         {
-            for (auto q = p; q != begin(index); --q)
-                if (prev(q)->first.second) // Only for the entries with starting points
-                    for (int i : prev(q)->second)
-                        candidates[i].insert(p->second.cbegin(), p->second.cend());
+            for (int i : e.second)
+                parent_candidates[i] = active;
+
+            active.insert(e.second.cbegin(), e.second.cend());
         }
-        else
+        else // An entry with e.second containing the list of segments ending at e.first.first
         {
-            for (int i : p->second) // Elements ending here
+            for (int i : e.second) // Elements ending at e.first.first
             {
                 unsigned this_depth = deepest_child_depth[i] + 1;
 
-                for (int j = 0; j < n; ++j)  // Candidate parents
+                for (int j : parent_candidates[i])
                 {
-                    if (candidates[j].find(i) == candidates[j].end()) continue;
+                    if (segments[j].second == segments[i].second) continue;
 
-                    if (deepest_child_depth[j] < this_depth)
+                    if (this_depth > deepest_child_depth[j])
                     {
                         deepest_child_depth[j] = this_depth;
                         deepest_child[j] = i;
                     }
                 }
 
-                for (auto q = p; q != begin(index); --q)
-                    prev(q)->second.erase(i);
+                active.erase(i);
             }
         }
     }
-
-    // Verify that all the starts ended
-    for (auto e : index) if (e.first.second) assert(e.second.empty());
 
     unsigned max_child_depth = 0;
     int iDeepest = 0;
