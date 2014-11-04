@@ -42,10 +42,10 @@ int main()
         infloor[0][0] = rooms[0];
         for (short j = 1; j < n; ++j)
         {
-            infloor[0][j] = infloor[j][0] = infloor[0][j-1] + rooms[j];
+            infloor[j][0] = infloor[j-1][0] + rooms[j];
             infloor[j][j] = rooms[j];
             for (short k = 1; k < j; ++k)
-                infloor[k][j] = infloor[j][k] = infloor[k-1][j] - rooms[k-1];
+                infloor[j][k] = infloor[j][k-1] - rooms[k-1];
         }
 
         for (short j = 0; j < n; ++j)
@@ -55,7 +55,7 @@ int main()
 
             for (short k = 0; k < n; ++k)
             {
-                long long path_to_j_via_k = prev_lengths[k] + infloor[k][j];
+                long long path_to_j_via_k = prev_lengths[k] + (k > j ? infloor[k][j] : infloor[j][k]);
                 if (path_to_j_via_k < shortest_path)
                 {
                     shortest_path = path_to_j_via_k;
