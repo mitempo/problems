@@ -25,7 +25,7 @@ template <typename Tree> void dfs(Tree t, function<void(decltype(t->value))> fVi
         t = todo.top()->right;
         todo.pop();
     }
-};
+}
 
 struct Node
 {
