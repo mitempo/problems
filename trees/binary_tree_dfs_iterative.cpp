@@ -5,11 +5,11 @@
 using namespace std;
 
 // Iterative DFS for a binary tree.
-// Tree must be a (smart) pointer to a struct with 'value', 'left', and 'right'
+// BinaryTree must be a (smart) pointer to a struct with 'value', 'left', and 'right'
 // members. 
-template <typename Tree> void dfs(Tree t, function<void(decltype(t->value))> fVisit)
+template <typename BinaryTree> void dfs(BinaryTree t, function<void(decltype(t->value))> fVisit)
 {
-    stack<Tree> todo;
+    stack<BinaryTree> todo;
 
     for ( ; ; )
     {
