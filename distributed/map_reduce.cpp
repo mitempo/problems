@@ -82,23 +82,26 @@ void agent_algo(const Engine<int>& e)
     int payload = e.getMyPayload();
     int n = e.getN();
 
-    int d = 2;
+    vector<int> children;
+    children.reserve(2);
 
-    for (; id % d == 0 && d/2 < n; d *= 2)
-        if (id + d/2 < n)
-            payload += e.receive();
+    for (auto i : {id*2 + 1, id*2 + 2})
+        if (i < n)
+            children.push_back(i);
+
+    for (size_t i = 0; i < children.size(); ++i)
+        payload += e.receive();
 
     if (id != 0)
     {
-        e.send(id - d/2, payload);
+        e.send((id - 1)/2, payload);
         payload = e.receive();
     }
 
     printf("%d: RESULT: %d\n", id, payload);
 
-    for (d /= 4; d > 0; d /= 2)
-        if (id + d < n)
-            e.send(id + d, payload);
+    for (auto i : children)
+        e.send(i, payload);
 }
 
 int main(int argc, char *argv[])
