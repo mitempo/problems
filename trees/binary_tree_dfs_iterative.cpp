@@ -4,10 +4,10 @@
 
 using namespace std;
 
-// Iterative DFS for a binary tree.
-// BinaryTree must be a (smart) pointer to a struct with 'value', 'left', and 'right'
+// Iterative inorder DFS traversal of a binary tree.
+// BinaryTree must be a (possibly smart) pointer to a struct with 'value', 'left', and 'right'
 // members. 
-template <typename BinaryTree> void dfs(BinaryTree t, function<void(decltype(t->value))> fVisit)
+template <typename BinaryTree> void dfs_in(BinaryTree t, function<void(decltype(t->value))> fVisit)
 {
     stack<BinaryTree> todo;
 
@@ -27,6 +27,29 @@ template <typename BinaryTree> void dfs(BinaryTree t, function<void(decltype(t->
     }
 }
 
+// Iterative preorder DFS traversal of a binary tree.
+// BinaryTree must be a (possibly smart) pointer to a struct with 'value', 'left', and 'right'
+// members. 
+template <typename BinaryTree> void dfs_pre(BinaryTree t, function<void(decltype(t->value))> fVisit)
+{
+    stack<BinaryTree> todo;
+
+    for ( ; ; )
+    {
+        while (t != nullptr)
+        {
+            fVisit(t->value);
+            todo.push(t->right);
+            t = t->left;
+        }
+
+        if (todo.empty()) break;
+
+        t = todo.top();
+        todo.pop();
+    }
+}
+
 struct Node
 {
     Node(char v, Node *l = nullptr, Node *r = nullptr) : value(v), left(l), right(r) {}
@@ -38,11 +61,21 @@ struct Node
 
 int main()
 {
-    dfs(static_cast<Node*>(nullptr), [](char c){ cout << c; });
+    dfs_in(static_cast<Node*>(nullptr), [](char c){ cout << c; });
     cout << endl;
 
-    dfs(new Node('x'), [](char c){ cout << c; });
+    dfs_in(new Node('x'), [](char c){ cout << c; });
     cout << endl;
 
-    dfs(new Node('x', new Node('a', new Node('1'), new Node('2')), new Node('b', new Node('3'), new Node('4'))), [](char c){ cout << c; });
+    dfs_in(new Node('*', new Node('+', new Node('1'), new Node('2')), new Node('-', new Node('3'), new Node('4'))), [](char c){ cout << c; });
+    cout << endl;
+
+    dfs_pre(static_cast<Node*>(nullptr), [](char c){ cout << c; });
+    cout << endl;
+
+    dfs_pre(new Node('x'), [](char c){ cout << c; });
+    cout << endl;
+
+    dfs_pre(new Node('*', new Node('+', new Node('1'), new Node('2')), new Node('-', new Node('3'), new Node('4'))), [](char c){ cout << c; });
+    cout << endl;
 }
