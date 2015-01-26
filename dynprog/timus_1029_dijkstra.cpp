@@ -4,17 +4,16 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
-#include <limits>
-#include <map>
+#include <unordered_map>
 #include <vector>
 
 using namespace std;
 
-template <typename T, typename Compare> class pqueue
+template <typename T, typename Compare, typename Hash = hash<T>> class pqueue
 {
 private:
     vector<T> heap_;
-    map<T, size_t> indices_; // Mapping of a value to its index in the heap_ vector. Required for decrease_key().
+    unordered_map<T, size_t, Hash> indices_; // Mapping of a value to its index in the heap_ vector. Required for decrease_key().
     Compare comp_;
 
     size_t get_parent(size_t i) { return (i - 1) / 2; }
@@ -62,8 +61,9 @@ private:
     }
 
 public:
-    pqueue(const Compare& comp = Compare()) :
-        comp_(comp)
+    pqueue(size_t bucket_count, const Compare& comp = Compare(), const Hash& hash = Hash()) :
+        comp_(comp),
+        indices_(bucket_count, hash)
     {
     }
 
@@ -137,6 +137,11 @@ struct nodeid
     {
         return a.i < b.i || a.i == b.i && a.j < b.j;
     }
+
+    friend bool operator==(const nodeid& a, const nodeid& b)
+    {
+        return a.i == b.i && a.j == b.j;
+    }
 };
 
 const int MAX_M = 100; // Max possible number of floors
@@ -161,10 +166,23 @@ vector<nodeid> get_succs(nodeid id)
 
 struct lencomp
 {
-    bool operator()(const nodeid& a, const nodeid& b)
+    bool operator()(const nodeid& a, const nodeid& b) const
     {
         return lens[a.i][a.j] < lens[b.i][b.j];
     }
+};
+
+struct nodeidhash
+{
+    nodeidhash(int n) : n_(n) {}
+
+    size_t operator()(nodeid id) const
+    {
+        return id.i * n + id.j;
+    }
+
+private:
+    int n_;
 };
 
 int main()
@@ -178,7 +196,7 @@ int main()
         lens[i][j] = i == 0 ? input[i][j] : static_cast<unsigned long long>(-1);
     }
 
-    pqueue<nodeid, lencomp> q;
+    pqueue<nodeid, lencomp, nodeidhash> q(m * n, lencomp(), nodeidhash(n));
 
     for (int j = 0; j < n; ++j)
     {
