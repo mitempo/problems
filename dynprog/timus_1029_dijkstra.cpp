@@ -4,16 +4,15 @@
 #include <algorithm>
 #include <iostream>
 #include <iterator>
-#include <unordered_map>
 #include <vector>
 
 using namespace std;
 
-template <typename T, typename Compare, typename Hash = hash<T>> class pqueue
+template <typename T, typename Compare, typename Map> class pqueue
 {
 private:
     vector<T> heap_;
-    unordered_map<T, size_t, Hash> indices_; // Mapping of a value to its index in the heap_ vector. Required for decrease_key().
+    Map indices_; // Mapping of a value to its index in the heap_ vector. Required for decrease_key().
     Compare comp_;
 
     size_t get_parent(size_t i) { return (i - 1) / 2; }
@@ -61,13 +60,13 @@ private:
     }
 
 public:
-    pqueue(size_t bucket_count, const Compare& comp = Compare(), const Hash& hash = Hash()) :
+    pqueue(const Compare& comp = Compare(), const Map& map = Map()) :
         comp_(comp),
-        indices_(bucket_count, hash)
+        indices_(map)
     {
     }
 
-    friend void swap(pqueue<T, Compare>& left, pqueue<T, Compare>& right)
+    friend void swap(pqueue<T, Compare, Map>& left, pqueue<T, Compare, Map>& right)
     {
         using std::swap;
 
@@ -98,11 +97,11 @@ public:
 
     void push_or_decrease(const T& e)
     {
-        auto p = indices_.find(e);
-        if (p == indices_.end())
+        size_t i = indices_[e];
+        if (i == static_cast<size_t>(-1))
             push(e);
         else
-            decrease_key(p->second);
+            decrease_key(i);
     }
 
     const T& top()
@@ -150,6 +149,7 @@ const int MAX_N = 500; // Max possible number of rooms on a floor
 unsigned long long input[MAX_M][MAX_N]; // Ministry as read from the input
 unsigned long long lens [MAX_M][MAX_N]; // Lengths of the shortest paths
 nodeid             pred [MAX_M][MAX_N]; // Predecessor room on the shortest path
+size_t             ind  [MAX_M][MAX_N]; // Indices in the priority queue's heap
 
 int m; // Number of floors
 int n; // Number of rooms on each floor
@@ -174,15 +174,15 @@ struct lencomp
 
 struct nodeidhash
 {
-    nodeidhash(int n) : n_(n) {}
-
-    size_t operator()(nodeid id) const
+    size_t& operator[](nodeid id)
     {
-        return id.i * n + id.j;
+        return ind[id.i][id.j];
     }
 
-private:
-    int n_;
+    void erase(nodeid id)
+    {
+        ind[id.i][id.j] = static_cast<size_t>(-1);
+    }
 };
 
 int main()
@@ -194,9 +194,10 @@ int main()
     {
         cin >> input[i][j];
         lens[i][j] = i == 0 ? input[i][j] : static_cast<unsigned long long>(-1);
+        ind[i][j] = static_cast<size_t>(-1);
     }
 
-    pqueue<nodeid, lencomp, nodeidhash> q(m * n, lencomp(), nodeidhash(n));
+    pqueue<nodeid, lencomp, nodeidhash> q;
 
     for (int j = 0; j < n; ++j)
     {
