@@ -2,7 +2,7 @@
 // Via Dijkstra shortest path, time complexity O(MxNxlog(MxN))
 
 #include <algorithm>
-#include <iostream>
+#include <cstdio>
 #include <iterator>
 #include <vector>
 
@@ -187,12 +187,12 @@ struct nodeidhash
 
 int main()
 {
-    cin >> m >> n;
+    scanf("%d%d", &m, &n);
 
     for (int i = 0; i < m; ++i)
     for (int j = 0; j < n; ++j)
     {
-        cin >> input[i][j];
+        scanf("%ull", &input[i][j]);
         lens[i][j] = i == 0 ? input[i][j] : static_cast<unsigned long long>(-1);
         ind[i][j] = static_cast<size_t>(-1);
     }
@@ -239,5 +239,6 @@ int main()
         cur = pred[cur.i][cur.j];
     } while (cur.i >= 0);
 
-    copy(result.rbegin(), result.rend(), ostream_iterator<int>(cout, " "));
+    for (auto p = result.rbegin(); p != result.rend(); ++p)
+        printf("%d ", *p);
 }
