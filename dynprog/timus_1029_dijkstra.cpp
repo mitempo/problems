@@ -154,14 +154,14 @@ size_t             ind  [MAX_M][MAX_N]; // Indices in the priority queue's heap
 int m; // Number of floors
 int n; // Number of rooms on each floor
 
-vector<nodeid> get_succs(nodeid id)
+void get_succs(nodeid id, vector<nodeid>& succs) // Output reference here far outperforms return by value
 {
-    vector<nodeid> r{{ id.i + 1, id.j }};
+    succs.clear();
 
-    if (id.j != 0)    r.push_back({ id.i, id.j - 1 });
-    if (id.j < n - 1) r.push_back({ id.i, id.j + 1 });
+    succs.push_back({ id.i + 1, id.j });
 
-    return r;
+    if (id.j != 0)    succs.push_back({ id.i, id.j - 1 });
+    if (id.j < n - 1) succs.push_back({ id.i, id.j + 1 });
 }
 
 struct lencomp
@@ -206,6 +206,7 @@ int main()
     }
 
     nodeid cur;
+    vector<nodeid> succs;
 
     for ( ; ; )
     {
@@ -213,7 +214,9 @@ int main()
 
         if (cur.i == m - 1) break;
 
-        for (const auto& s : get_succs(cur))
+        get_succs(cur, succs);
+
+        for (const auto& s : succs)
         {
             auto len = lens[cur.i][cur.j] + input[s.i][s.j];
 
