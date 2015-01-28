@@ -131,16 +131,6 @@ struct nodeid
 {
     int i;
     int j;
-
-    friend bool operator<(const nodeid& a, const nodeid& b)
-    {
-        return a.i < b.i || a.i == b.i && a.j < b.j;
-    }
-
-    friend bool operator==(const nodeid& a, const nodeid& b)
-    {
-        return a.i == b.i && a.j == b.j;
-    }
 };
 
 const int MAX_M = 100; // Max possible number of floors
