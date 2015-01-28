@@ -192,7 +192,7 @@ int main()
     for (int i = 0; i < m; ++i)
     for (int j = 0; j < n; ++j)
     {
-        scanf("%ull", &input[i][j]);
+        scanf("%llu", &input[i][j]);
         lens[i][j] = i == 0 ? input[i][j] : static_cast<unsigned long long>(-1);
         ind[i][j] = static_cast<size_t>(-1);
     }
