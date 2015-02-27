@@ -1,23 +1,33 @@
+#include <algorithm>
+#include <cstring>
 #include <iostream>
-#include <map>
+#include <tuple>
+#include <vector>
 
 using namespace std;
 
-map<string, unsigned int> roman_values
+struct rdigit
 {
-    { "IV", 4 },
-    { "IX", 9 },
-    { "XL", 40 },
-    { "XC", 90 },
-    { "CD", 400 },
-    { "CM", 900 },
-    { "I",  1 },
-    { "V",  5 },
-    { "X",  10 },
-    { "L",  50 },
-    { "C",  100 },
-    { "D",  500 },
-    { "M",  1000 }
+    const char *roman;
+    unsigned int value;
+    unsigned int next_max_acceptable;
+};
+
+vector<rdigit> roman_digits
+{
+    { "M",  1000, 1000 },
+    { "CM",  900,   90 },
+    { "D",   500,  100 },
+    { "CD",  400,   90 },
+    { "C",   100,  100 },
+    { "XC",   90,    9 },
+    { "L",    50,   10 },
+    { "XL",   40,    9 },
+    { "X",    10,   10 },
+    { "IX",    9,    0 },
+    { "V",     5,    1 },
+    { "IV",    4,    0 },
+    { "I",     1,    1 }
 };
 
 unsigned int roman_to_num(const char *roman)
@@ -25,43 +35,35 @@ unsigned int roman_to_num(const char *roman)
     if (roman == nullptr) throw;
 
     unsigned long result = 0;
-    unsigned long lowest_value = 1001;
-    unsigned long lowest_value_count = 0;
 
-    char buf[3];
-    buf[2] = 0;
+    unsigned long last_value = 0;
+    unsigned long last_value_count = 0;
+    unsigned long max_acceptable = 1000;
 
-    for (const char *p = roman; *p;)
+    for (const char *p = roman; *p; )
     {
-        buf[0] = p[0];
-        buf[1] = p[1];
-
-        auto pv = roman_values.find(buf);
-        if (buf[1] && pv != roman_values.cend())
-        {
-            auto value = pv->second;
-            if (value >= lowest_value) throw;
-            result += value;
-            lowest_value = value;
-            lowest_value_count = 1;
-            p += 2;
-        }
-        else
-        {
-            buf[1] = 0;
-            pv = roman_values.find(buf);
-            if (pv == roman_values.cend()) throw;
-            auto value = pv->second;
-            if (value > lowest_value) throw;
-            if (value == lowest_value && ++lowest_value_count > 3) throw;
-            result += value;
-            if (value < lowest_value)
+        auto pdigit = find_if(
+            roman_digits.cbegin(),
+            roman_digits.cend(),
+            [p](const rdigit& digit)
             {
-                lowest_value = value;
-                lowest_value_count = 1;
-            }
-            ++p;
+                return strncmp(digit.roman, p, strlen(digit.roman)) == 0;
+            });
+
+        if (pdigit == roman_digits.cend() ||
+            pdigit->value > max_acceptable ||
+            pdigit->value == last_value && ++last_value_count > 3) throw;
+
+        result += pdigit->value;
+
+        if (pdigit->value != last_value)
+        {
+            last_value = pdigit->value;
+            last_value_count = 1;
+            max_acceptable = pdigit->next_max_acceptable;
         }
+
+        p += strlen(pdigit->roman);
     }
 
     return result;
@@ -69,5 +71,5 @@ unsigned int roman_to_num(const char *roman)
 
 int main()
 {
-    cout << roman_to_num("MDLL");
+    cout << roman_to_num("MMMCDXXXIV");
 }
