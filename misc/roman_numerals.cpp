@@ -1,6 +1,7 @@
+#include <stdio.h>
 #include <algorithm>
 #include <cstring>
-#include <iostream>
+#include <cassert>
 #include <tuple>
 #include <vector>
 
@@ -11,6 +12,11 @@ struct rdigit
     const char *roman;
     unsigned int value;
     unsigned int next_max_acceptable;
+
+    friend bool operator<(unsigned int value, const rdigit& rdigit)
+    {
+        return value < rdigit.value;
+    }
 };
 
 vector<rdigit> roman_digits
@@ -52,7 +58,7 @@ unsigned int roman_to_num(const char *roman)
 
         if (pdigit == roman_digits.cend() ||
             pdigit->value > max_acceptable ||
-            pdigit->value == last_value && ++last_value_count > 3) throw;
+            pdigit->value == last_value && ++last_value_count > 3) throw exception();
 
         result += pdigit->value;
 
@@ -69,7 +75,27 @@ unsigned int roman_to_num(const char *roman)
     return result;
 }
 
+string num_to_roman(unsigned int value)
+{
+    string result;
+
+    for ( ; ; )
+    {
+        auto pdigit = upper_bound(roman_digits.rbegin(), roman_digits.rend(), value);
+
+        if (pdigit-- == roman_digits.rbegin()) break;
+
+        result += pdigit->roman;
+        value -= pdigit->value;
+    }
+
+    return result;
+}
+
 int main()
 {
-    cout << roman_to_num("MMMCDXXXIV");
+    for (unsigned int i = 0; i <= 3999; ++i)
+        assert(roman_to_num(num_to_roman(i).c_str()) == i);
+
+    printf("Success!");
 }
