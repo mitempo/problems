@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <cstring>
 #include <cassert>
-#include <tuple>
+#include <functional>
 #include <vector>
 
 using namespace std;
@@ -10,10 +10,9 @@ using namespace std;
 struct rdigit
 {
     const char *roman;
-    unsigned int value;
-    unsigned int next_max_acceptable;
+    unsigned short value;
 
-    friend bool operator<(unsigned int value, const rdigit& rdigit)
+    friend bool operator<(unsigned short value, const rdigit& rdigit)
     {
         return value < rdigit.value;
     }
@@ -21,30 +20,28 @@ struct rdigit
 
 vector<rdigit> roman_digits
 {
-    { "M",  1000, 1000 },
-    { "CM",  900,   90 },
-    { "D",   500,  100 },
-    { "CD",  400,   90 },
-    { "C",   100,  100 },
-    { "XC",   90,    9 },
-    { "L",    50,   10 },
-    { "XL",   40,    9 },
-    { "X",    10,   10 },
-    { "IX",    9,    0 },
-    { "V",     5,    1 },
-    { "IV",    4,    0 },
-    { "I",     1,    1 }
+    { "M",  1000 },
+    { "CM",  900 },
+    { "D",   500 },
+    { "CD",  400 },
+    { "C",   100 },
+    { "XC",   90 },
+    { "L",    50 },
+    { "XL",   40 },
+    { "X",    10 },
+    { "IX",    9 },
+    { "V",     5 },
+    { "IV",    4 },
+    { "I",     1 }
 };
 
-unsigned int roman_to_num(const char *roman)
+short roman_to_num(const char *roman)
 {
-    if (roman == nullptr) throw;
+    short result = 0;
 
-    unsigned long result = 0;
-
-    unsigned long last_value = 0;
-    unsigned long last_value_count = 0;
-    unsigned long max_acceptable = 1000;
+    unsigned short last_value = 1000;
+    unsigned short last_value_count = 0;
+    unsigned short max_acceptable = 1000;
 
     for (const char *p = roman; *p; )
     {
@@ -58,7 +55,7 @@ unsigned int roman_to_num(const char *roman)
 
         if (pdigit == roman_digits.cend() ||
             pdigit->value > max_acceptable ||
-            pdigit->value == last_value && ++last_value_count > 3) throw exception();
+            pdigit->value == last_value && ++last_value_count > 3) return -1;
 
         result += pdigit->value;
 
@@ -66,7 +63,7 @@ unsigned int roman_to_num(const char *roman)
         {
             last_value = pdigit->value;
             last_value_count = 1;
-            max_acceptable = pdigit->next_max_acceptable;
+            max_acceptable = (pdigit-1)->value - pdigit->value - 1;
         }
 
         p += strlen(pdigit->roman);
@@ -75,7 +72,7 @@ unsigned int roman_to_num(const char *roman)
     return result;
 }
 
-string num_to_roman(unsigned int value)
+string num_to_roman(unsigned short value)
 {
     string result;
 
@@ -92,10 +89,37 @@ string num_to_roman(unsigned int value)
     return result;
 }
 
+// Generates all roman "digits" sequences with the total length of distance(pb, pe)
+template <typename I> void gen(I pb, I pe, function<void()> f)
+{
+    if (pb == pe)
+    {
+        f();
+        return;
+    }
+
+    for (auto&& e : roman_digits)
+    {
+        if (strlen(e.roman) > static_cast<size_t>(distance(pb, pe))) continue;
+
+        copy(e.roman, e.roman+strlen(e.roman), pb);
+        gen(pb + strlen(e.roman), pe, f);
+    }
+}
+
 int main()
 {
-    for (unsigned int i = 0; i <= 3999; ++i)
+    for (unsigned short i = 0; i <= 3999; ++i)
         assert(roman_to_num(num_to_roman(i).c_str()) == i);
+
+    char buf[8] = {};
+
+    for (size_t i = 0; i < sizeof buf/sizeof *buf; ++i)
+        gen(buf, buf + i, [&buf]()
+                          {
+                              short n = roman_to_num(buf);
+                              if (n >= 0) assert(num_to_roman(n) == buf);
+                          });
 
     printf("Success!");
 }
