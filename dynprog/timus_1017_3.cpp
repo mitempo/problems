@@ -21,4 +21,13 @@ int main()
     int n;
     cin >> n;
     cout << f(n, 0) - 1;
+
+    #ifdef DEBUG
+    for (int i = 0; i < 40; ++i)
+    {
+        for (int j = 0; j < 40; ++j)
+            if (d[i][j] == 0) printf("  ."); else printf("%3llu", d[i][j]);
+        cout << endl;
+    }
+    #endif
 }

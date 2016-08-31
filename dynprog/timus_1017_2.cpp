@@ -10,7 +10,7 @@ long long s[MAXN][MAXN];
 
 // Number of stairs of n blocks with the highest column
 // is no larger than k.
-auto stairs(int n, int k)
+auto stairs(int n, int k) -> long long
 {
     if (n < 0 || k < 0) return 0LL;
 
@@ -27,4 +27,13 @@ int main()
     cin >> n;
 
     cout << stairs(n, n) - 1;
+
+    #ifdef DEBUG
+    for (int i = 0; i < 40; ++i)
+    {
+        for (int j = 0; j < 40; ++j)
+            if (s[i][j] == 0 || s[i][j] == -1) printf("  ."); else printf("%3llu", s[i][j]);
+        cout << endl;
+    }
+    #endif
 }
