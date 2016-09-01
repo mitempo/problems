@@ -2,24 +2,21 @@
 #include <algorithm>
 #include <string>
 #include <vector>
-#include <unordered_set>
+#include <set>
 
 using namespace std;
-
-using uint = unsigned int;
-template <typename T> using uset = unordered_set<T>;
 
 struct cell
 {
     int len;
-    uset<string> cands;
+    set<string> cands;
 };
 
 class solver
 {
     cell d[81][81];
 
-    cell& s(const char *pa, uint lena, const char *pb, uint lenb)
+    cell& s(const char *pa, int lena, const char *pb, int lenb)
     {
         cell& r = d[lena][lenb];
 
@@ -27,7 +24,7 @@ class solver
 
         if (lena == 0 || lenb == 0)
         {
-            uset<string> v{""};
+            set<string> v{""};
             r = {0, v};
             return r;
         }
@@ -35,7 +32,7 @@ class solver
         if (pa[lena-1] == pb[lenb-1])
         {
             const cell& rr = s(pa, lena-1, pb, lenb-1);
-            uset<string> v;
+            set<string> v;
             transform(rr.cands.cbegin(), rr.cands.cend(), inserter(v, v.end()), [=](string str){ return str.append(1, pa[lena-1]); });
             r = {rr.len + 1, v};
             return r;
@@ -64,7 +61,7 @@ class solver
     }
 
 public:
-    uset<string> s(string a, string b)
+    set<string> s(string a, string b)
     {
         return s(a.c_str(), a.length(), b.c_str(), b.length()).cands;
     }
@@ -75,7 +72,7 @@ int main()
     int t;
     cin >> t;
 
-    for (int i = 0; i < t; ++i)
+    while (t--)
     {
         string a;
         string b;
