@@ -8,6 +8,7 @@
 #include <utility>
 #include <stack>
 #include <map>
+#include <stdexcept>
 
 using namespace std;
 
@@ -58,7 +59,7 @@ string rpn(const string& expr)
                 opstk.pop(); 
             }
 
-            if (opstk.empty()) throw exception("Unmatched parens");
+            if (opstk.empty()) throw runtime_error("Unmatched parens");
 
             opstk.pop();
             continue;
@@ -86,7 +87,14 @@ string rpn(const string& expr)
 
 int main()
 {
-    string expr;
-    cin >> expr;
-    cout << rpn(expr) << endl;
+    int t;
+    cin >> t;
+
+    while (t--)
+    {
+        string expr;
+        cin >> expr;
+
+        cout << rpn(expr) << endl;
+    }
 }
