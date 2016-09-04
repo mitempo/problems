@@ -65,8 +65,10 @@ unique_ptr<node> ast(const string& expr)
         }
         else
         {
-            while (!opstk.empty() && getprec(opstk.top()) > getprec(c))
+            while (!opstk.empty() && getprec(opstk.top()) >= getprec(c))
                 popop();
+
+            opstk.push(c);
         }
 
     }
@@ -88,10 +90,11 @@ string unparen(node *ast)
             ? unparen(ast->left.get())
             : "(" + unparen(ast->left.get()) + ")") +
         ast->c +
-        ((getprec(ast->c) < getprec(ast->right->c) || getprec(ast->c) == getprec(ast->right->c) && (ast->c == '+' && ast->c == '-'))
+        ((getprec(ast->c) < getprec(ast->right->c) || getprec(ast->c) == getprec(ast->right->c) && (ast->c == '+' || ast->c == '*'))
             ? unparen(ast->right.get())
             : "(" + unparen(ast->right.get()) + ")");
 }
+
 
 int main()
 {
@@ -102,6 +105,6 @@ int main()
     {
         string expr;
         cin >> expr;
-        cout << unparen(ast(expr).get());
+        cout << unparen(ast(expr).get()) << endl;
     }
 }
