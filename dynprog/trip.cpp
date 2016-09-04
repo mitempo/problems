@@ -61,7 +61,7 @@ class solver
     }
 
 public:
-    set<string> s(string a, string b)
+    set<string> s(const string& a, const string& b)
     {
         return s(a.c_str(), a.length(), b.c_str(), b.length()).cands;
     }
