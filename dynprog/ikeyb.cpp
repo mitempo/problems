@@ -79,7 +79,7 @@ int main()
     int t;
     cin >> t;
 
-    for (int i = 0; i < t; ++i)
+    for (int i = 1; i <= t; ++i)
     {
         int k, l;
         cin >> k >> l;
@@ -87,16 +87,20 @@ int main()
         string keys, letters;
         cin >> keys >> letters;
 
-        vector<int> f{istream_iterator<int>(cin), istream_iterator<int>()};
-
-        map<char, int> freq_table;
+        map<char, int> f;
 
         for (int j = 0; j < l; ++j)
-            freq_table[letters[j]] = f[j];
+        {
+            int v;
+            cin >> v;
+            f[letters[j]] = v;
+        }
 
-        cout << "Keypad #" << (i + 1) << ":" << endl;
+        cout << "Keypad #" << i << ":" << endl;
 
-        for (auto&& pair : solver(freq_table).solve(keys.cbegin(), keys.cend(), letters.cbegin(), letters.cend()).first)
+        for (auto pair : solver(f).solve(keys.cbegin(), keys.cend(), letters.cbegin(), letters.cend()).first)
             cout << pair.first << ": " << pair.second << endl;
+
+        cout << endl;
     }
 }
