@@ -48,31 +48,29 @@ private:
     map<char, string> do_solve(I pkb, I pke, I plb, I ple)
     {
         map<char, string> r;
+        long minsofar = numeric_limits<long>::max();
 
         if (pkb == pke) return r;
 
-        r[*pkb] = string();
-
-        long minsofar = numeric_limits<long>::max();
-        map<char, string> rsofar;
+        string s;
 
         for (; plb != ple; ++plb)
         {
-            r[*pkb] += *plb;
+            s += *plb;
 
             auto nr = solve(next(pkb), pke, next(plb), ple);
+            nr[*pkb] = s;
 
-            long cst = cost(r) + cost(nr);
+            long cst = cost(nr);
 
             if (cst < minsofar)
             {
                 minsofar = cst;
-                rsofar = r;
-                rsofar.insert(nr.cbegin(), nr.cend());
+                r = nr;
             }
         }
 
-        return rsofar;
+        return r;
     }
 };
 
