@@ -2,7 +2,6 @@
 #include <iterator>
 #include <string>
 #include <utility>
-#include <tuple>
 #include <vector>
 #include <map>
 #include <limits>
@@ -14,7 +13,7 @@ class solver
 {
     using I = string::const_iterator;
 
-    map<tuple<I, I, I, I>, pair<map<char, string>, long>> d;
+    map<pair<I, I>, pair<map<char, string>, long>> d;
     map<char, int> f;
 
     long cost(string s)
@@ -37,7 +36,7 @@ public:
 
     pair<map<char, string>, long> solve(I pkb, I pke, I plb, I ple)
     {
-        auto args = make_tuple(pkb, pke, plb, ple);
+        auto args = make_pair(pkb, plb);
 
         auto ps = d.find(args);
         if (ps != d.cend()) return ps->second;
