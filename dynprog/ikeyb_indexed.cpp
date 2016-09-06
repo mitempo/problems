@@ -1,12 +1,11 @@
 #include <iostream>
-#include <iterator>
+#include <algorithm>
 #include <string>
 #include <utility>
 #include <vector>
-#include <map>
 #include <limits>
-#include <numeric>
 #include <cstdint>
+#include <type_traits>
 
 using namespace std;
 
@@ -14,9 +13,10 @@ class solver
 {
     size_t nkeys;
     const char *l;
-    map<char, int> f;
+    const int *f;
 
-    map<uint16_t, pair<vector<uint16_t>, long>> d;
+    pair<vector<uint16_t>, long> d[256][256];
+    long dcost[256][256];
 
     long cost(uint8_t ib, uint8_t ie)
     {
@@ -29,40 +29,35 @@ class solver
     }
 
 public:
-    solver(size_t nkeys, const char *letters, map<char, int> freq_table) : nkeys(nkeys), l(letters), f(freq_table) {}
+    solver(size_t nkeys, const char *letters, const int *freq_table) : nkeys(nkeys), l(letters), f(freq_table)
+    {
+        fill_n((remove_all_extents<decltype(d)>::type *)d, extent<decltype(d), 0>::value * extent<decltype(d), 1>::value, make_pair(vector<uint16_t>(nkeys), -1l));
+        fill_n((remove_all_extents<decltype(dcost)>::type *)dcost, extent<decltype(dcost), 0>::value * extent<decltype(dcost), 1>::value, -1);
+    }
 
     pair<vector<uint16_t>, long> solve(uint8_t ik, uint8_t il)
     {
-        auto args = uint16_t(ik << 8 | il);
+        auto& r = d[ik][il];
+        if (r.second != -1) return r;
 
-        auto ps = d.find(args);
-        if (ps != d.cend()) return ps->second;
+        r.second = l[il] == 0 ? 0 : numeric_limits<long>::max() / 2;
 
-        return d[args] = do_solve(ik, il);
-    }
-
-private:
-    pair<vector<uint16_t>, long> do_solve(uint8_t ik, uint8_t il)
-    {
-        vector<uint16_t> r(nkeys);
-        long mincost = l[il] == 0 ? 0 : numeric_limits<long>::max() / 2;
-
-        if (ik == nkeys) return {r, mincost};
+        if (ik == nkeys) return r;
 
         for (uint8_t ib = il; l[ib++] != 0;)
         {
-            auto nr = solve(uint8_t(ik + 1), uint8_t(ib));
+            auto nr = solve(ik + 1, uint8_t(ib));
             long cst = cost(il, ib) + nr.second;
 
-            if (cst < mincost)
+            if (cst < r.second)
             {
-                mincost = cst;
-                r = nr.first;
-                r[ik] = uint16_t(il << 8 | ib);
+                r.second = cst;
+                r.first = nr.first;
+                r.first[ik] = uint16_t(il << 8 | ib);
             }
         }
 
-        return {r, mincost};
+        return r;
     }
 };
 
@@ -79,7 +74,7 @@ int main()
         string keys, letters;
         cin >> keys >> letters;
 
-        map<char, int> f;
+        int f[256];
 
         for (int j = 0; j < l; ++j)
         {
