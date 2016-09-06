@@ -15,10 +15,10 @@ class solver
     const char *l;
     const int *f;
 
-    pair<vector<uint16_t>, long> d[100][100];
-    long dcost[100][100];
+    pair<vector<uint16_t>, int32_t> d[100][100];
+    int32_t dcost[100][100];
 
-    long cost(uint8_t ib, uint8_t ie)
+    int32_t cost(uint8_t ib, uint8_t ie)
     {
         auto& cost = dcost[ib][ie];
         if (cost != -1) return cost;
@@ -38,19 +38,19 @@ public:
         fill_n((remove_all_extents<decltype(dcost)>::type *)dcost, extent<decltype(dcost), 0>::value * extent<decltype(dcost), 1>::value, -1);
     }
 
-    pair<vector<uint16_t>, long> solve(uint8_t ik, uint8_t il)
+    pair<vector<uint16_t>, int32_t> solve(uint8_t ik, uint8_t il)
     {
         auto& r = d[ik][il];
         if (r.second != -1) return r;
 
-        r.second = l[il] == 0 ? 0 : numeric_limits<long>::max() / 2;
+        r.second = l[il] == 0 ? 0 : numeric_limits<int32_t>::max() / 2;
 
         if (ik == nkeys) return r;
 
         for (uint8_t ib = il; l[ib++] != 0;)
         {
             auto nr = solve(ik + 1, uint8_t(ib));
-            long cst = cost(il, ib) + nr.second;
+            int32_t cst = cost(il, ib) + nr.second;
 
             if (cst < r.second)
             {
