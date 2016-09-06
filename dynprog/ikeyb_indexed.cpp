@@ -15,7 +15,7 @@ class solver
     const char *l;
     const int *f;
 
-    pair<vector<uint16_t>, int32_t> d[100][100];
+    pair<uint8_t, int32_t> d[100][100];
     int32_t dcost[100][100];
 
     int32_t cost(uint8_t ib, uint8_t ie)
@@ -34,11 +34,11 @@ class solver
 public:
     solver(size_t nkeys, const char *letters, const int *freq_table) : nkeys(nkeys), l(letters), f(freq_table)
     {
-        fill_n((remove_all_extents<decltype(d)>::type *)d, extent<decltype(d), 0>::value * extent<decltype(d), 1>::value, make_pair(vector<uint16_t>(nkeys), -1l));
+        fill_n((remove_all_extents<decltype(d)>::type *)d, extent<decltype(d), 0>::value * extent<decltype(d), 1>::value, make_pair(0, -1));
         fill_n((remove_all_extents<decltype(dcost)>::type *)dcost, extent<decltype(dcost), 0>::value * extent<decltype(dcost), 1>::value, -1);
     }
 
-    pair<vector<uint16_t>, int32_t> solve_(uint8_t ik, uint8_t il)
+    pair<uint8_t, int32_t> solve_(uint8_t ik, uint8_t il)
     {
         auto& r = d[ik][il];
         if (r.second != -1) return r;
@@ -50,22 +50,32 @@ public:
         for (uint8_t ib = il; l[ib++] != 0;)
         {
             auto nr = solve_(ik + 1, ib);
-            int32_t cst = cost(il, ib) + nr.second;
+            auto cst = cost(il, ib) + nr.second;
 
             if (cst < r.second)
             {
                 r.second = cst;
-                r.first = nr.first;
-                r.first[ik] = uint16_t(il << 8 | ib);
+                r.first = ib - il;
             }
         }
 
         return r;
     }
 
-    pair<vector<uint16_t>, int32_t> solve()
+    vector<string> solve()
     {
-        return solve_(0, 0);
+        solve_(0, 0);
+
+        vector<string> v(nkeys);
+
+        for(int ik = 0, il = 0; ik < nkeys; ++ik)
+        {
+            auto newil = il + d[ik][il].first;
+            v[ik] = string(l + il, l + newil);
+            il = newil;
+        }
+
+        return v;
     }
 };
 
@@ -93,10 +103,10 @@ int main()
 
         cout << "Keypad #" << i << ":" << endl;
 
-        vector<uint16_t> solution = solver(keys.size(), letters.c_str(), f).solve().first;
+        vector<string> solution = solver(keys.size(), letters.c_str(), f).solve();
 
         for (size_t i = 0; i < solution.size(); ++i)
-            cout << keys[i] << ": " << string(letters.c_str() + (solution[i] >> 8), letters.c_str() + (solution[i] & 255)) << endl;
+            cout << keys[i] << ": " << solution[i] << endl;
 
         cout << endl;
     }
