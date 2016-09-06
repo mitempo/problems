@@ -1,5 +1,4 @@
 #include <iostream>
-#include <algorithm>
 #include <string>
 #include <utility>
 #include <vector>
@@ -12,6 +11,7 @@ using namespace std;
 
 class solver
 {
+private:
     size_t nkeys;
     const char *l;
     const int *f;
@@ -22,8 +22,6 @@ class solver
 public:
     solver(size_t nkeys, const char *letters, const int *freq_table) : nkeys(nkeys), l(letters), f(freq_table)
     {
-        fill_n((remove_all_extents<decltype(d)>::type *)d, extent<decltype(d), 0>::value * extent<decltype(d), 1>::value, make_pair(0, -1));
-
         for (int i = 0; i < strlen(l); ++i)
         {
             cost[i][i] = 0;
@@ -36,7 +34,7 @@ public:
     pair<uint8_t, int32_t> solve_(uint8_t ik, uint8_t il)
     {
         auto& r = d[ik][il];
-        if (r.second != -1) return r;
+        if (r.first != 0) return r;
 
         r.second = l[il] == 0 ? 0 : numeric_limits<int32_t>::max() / 2;
 
