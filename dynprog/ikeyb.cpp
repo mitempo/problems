@@ -1,12 +1,11 @@
 #include <iostream>
 #include <string>
-#include <algorithm>
 #include <utility>
 #include <tuple>
 #include <vector>
-#include <set>
 #include <map>
 #include <limits>
+#include <numeric>
 
 using namespace std;
 
@@ -17,40 +16,41 @@ class solver
     map<tuple<I, I, I, I>, pair<map<char, string>, long>> d;
     map<char, int> f;
 
-    long cost(map<char, string> r)
+    long cost(string s)
     {
         long cost = 0;
 
-        for (auto&& e : r)
-            for (int i = 0; i < e.second.size(); ++i)
-                cost += (i + 1) * f[e.second[i]];
+        for (int i = 0; i < s.size(); ++i)
+            cost += (i + 1) * f[s[i]];
 
         return cost;
+    }
+
+    long cost(map<char, string> r)
+    {
+        return accumulate(r.cbegin(), r.cend(), 0, [&](long acc, pair<char, string> e){ return acc + cost(e.second); });
     }
 
 public:
     solver(map<char, int> freq_table) : f(freq_table) {}
 
-    map<char, string> solve(I pkb, I pke, I plb, I ple)
+    pair<map<char, string>, long> solve(I pkb, I pke, I plb, I ple)
     {
         auto args = make_tuple(pkb, pke, plb, ple);
 
         auto ps = d.find(args);
-        if (ps != d.cend()) return ps->second.first;
+        if (ps != d.cend()) return ps->second;
 
-        auto r = do_solve(pkb, pke, plb, ple);
-        d[args] = make_pair(r, cost(r));
-
-        return r;
+        return d[args] = do_solve(pkb, pke, plb, ple);
     }
 
 private:
-    map<char, string> do_solve(I pkb, I pke, I plb, I ple)
+    pair<map<char, string>, long> do_solve(I pkb, I pke, I plb, I ple)
     {
         map<char, string> r;
-        long minsofar = numeric_limits<long>::max();
+        long mincost = plb == ple ? 0 : numeric_limits<long>::max() / 2;
 
-        if (pkb == pke) return r;
+        if (pkb == pke) return {r, mincost};
 
         string s;
 
@@ -59,18 +59,17 @@ private:
             s += *plb;
 
             auto nr = solve(next(pkb), pke, next(plb), ple);
-            nr[*pkb] = s;
+            long cst = cost(s) + nr.second;
 
-            long cst = cost(nr);
-
-            if (cst < minsofar)
+            if (cst < mincost)
             {
-                minsofar = cst;
-                r = nr;
+                mincost = cst;
+                r = nr.first;
+                r[*pkb] = s;
             }
         }
 
-        return r;
+        return {r, mincost};
     }
 };
 
@@ -96,7 +95,7 @@ int main()
 
         cout << "Keypad #" << (i + 1) << ":" << endl;
 
-        for (auto&& pair : solver(freq_table).solve(keys.cbegin(), keys.cend(), letters.cbegin(), letters.cend()))
+        for (auto&& pair : solver(freq_table).solve(keys.cbegin(), keys.cend(), letters.cbegin(), letters.cend()).first)
             cout << pair.first << ": " << pair.second << endl;
     }
 }
