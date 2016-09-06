@@ -49,7 +49,7 @@ public:
 
         for (uint8_t ib = il; l[ib++] != 0;)
         {
-            auto nr = solve(ik + 1, uint8_t(ib));
+            auto nr = solve(ik + 1, ib);
             int32_t cst = cost(il, ib) + nr.second;
 
             if (cst < r.second)
