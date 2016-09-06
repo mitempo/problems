@@ -90,7 +90,7 @@ int main()
 
         vector<uint16_t> solution = solver(keys.size(), letters.c_str(), f).solve(0, 0).first;
 
-        for (int i = 0; i < solution.size(); ++i)
+        for (size_t i = 0; i < solution.size(); ++i)
             cout << keys[i] << ": " << string(letters.c_str() + (solution[i] >> 8), letters.c_str() + (solution[i] & 255)) << endl;
 
         cout << endl;
