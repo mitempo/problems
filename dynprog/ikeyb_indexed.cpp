@@ -20,7 +20,10 @@ class solver
 
     long cost(uint8_t ib, uint8_t ie)
     {
-        long cost = 0;
+        auto& cost = dcost[ib][ie];
+        if (cost != -1) return cost;
+
+        cost = 0;
 
         for (int w = 1; ib != ie; ++w, ++ib)
             cost += w * f[l[ib]];
