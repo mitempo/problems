@@ -28,18 +28,18 @@ class solver
         return cost;
     }
 
-    map<char, string> do_solve(I pkb, I pke, I plb, I ple);
-
 public:
     solver(map<char, int> freq_table) : f(freq_table) {}
 
     map<char, string> solve(I pkb, I pke, I plb, I ple)
     {
-        auto ps = d.find(make_tuple(pkb, pke, plb, ple));
-        if (ps != d.cend()) return ps->second->first;
+        auto args = make_tuple(pkb, pke, plb, ple);
+
+        auto ps = d.find(args);
+        if (ps != d.cend()) return ps->second.first;
 
         auto r = do_solve(pkb, pke, plb, ple);
-        r.insert(make_tuple(pkb, pke, plb, ple), make_pair(r, cost(r)));
+        d[args] = make_pair(r, cost(r));
 
         return r;
     }
@@ -53,8 +53,8 @@ private:
 
         r[*pkb] = string();
 
-        long minsofar = numeric_limits<long>::min();
-        map<char, strong> nrsofar;
+        long minsofar = numeric_limits<long>::max();
+        map<char, string> nrsofar;
 
         for (; plb != ple; ++plb)
         {
@@ -71,9 +71,10 @@ private:
             }
         }
 
-        r.insert(nbsofar.cbegin(), nrsofar.cend());
+        r.insert(nrsofar.cbegin(), nrsofar.cend());
         return r;
     }
+};
 
 int main()
 {
@@ -88,15 +89,16 @@ int main()
         string keys, letters;
         cin >> keys >> letters;
 
-        vector<int> f(istream_iterator<int>(cin), istream_iterator<int>());
+        vector<int> f{istream_iterator<int>(cin), istream_iterator<int>()};
+
         map<char, int> freq_table;
 
-        for (int i = 0; i < l; ++i)
-            freq_table.insert(letters[i], f[i]);
+        for (int j = 0; j < l; ++j)
+            freq_table[letters[j]] = f[j];
 
-        cout << "Keypad #" << i << ":" << endl;
+        cout << "Keypad #" << (i + 1) << ":" << endl;
 
         for (auto&& pair : solver(freq_table).solve(keys.cbegin(), keys.cend(), letters.cbegin(), letters.cend()))
-            cout << pair->first << ": " << pair->second << endl;
+            cout << pair.first << ": " << pair.second << endl;
     }
 }
