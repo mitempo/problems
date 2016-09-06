@@ -54,7 +54,7 @@ private:
         r[*pkb] = string();
 
         long minsofar = numeric_limits<long>::max();
-        map<char, string> nrsofar;
+        map<char, string> rsofar;
 
         for (; plb != ple; ++plb)
         {
@@ -67,12 +67,12 @@ private:
             if (cst < minsofar)
             {
                 minsofar = cst;
-                nrsofar = nr;
+                rsofar = r;
+                rsofar.insert(nr.cbegin(), nr.cend());
             }
         }
 
-        r.insert(nrsofar.cbegin(), nrsofar.cend());
-        return r;
+        return rsofar;
     }
 };
 
