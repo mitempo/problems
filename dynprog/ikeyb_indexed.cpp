@@ -5,6 +5,7 @@
 #include <vector>
 #include <limits>
 #include <cstdint>
+#include <cstring>
 #include <type_traits>
 
 using namespace std;
@@ -16,26 +17,20 @@ class solver
     const int *f;
 
     pair<uint8_t, int32_t> d[100][100];
-    int32_t dcost[100][100];
-
-    int32_t cost(uint8_t ib, uint8_t ie)
-    {
-        auto& cost = dcost[ib][ie];
-        if (cost != -1) return cost;
-
-        cost = 0;
-
-        for (int w = 1; ib != ie; ++w, ++ib)
-            cost += w * f[l[ib]];
-
-        return cost;
-    }
+    int32_t cost[100][100];
 
 public:
     solver(size_t nkeys, const char *letters, const int *freq_table) : nkeys(nkeys), l(letters), f(freq_table)
     {
         fill_n((remove_all_extents<decltype(d)>::type *)d, extent<decltype(d), 0>::value * extent<decltype(d), 1>::value, make_pair(0, -1));
-        fill_n((remove_all_extents<decltype(dcost)>::type *)dcost, extent<decltype(dcost), 0>::value * extent<decltype(dcost), 1>::value, -1);
+
+        for (int i = 0; i < strlen(l); ++i)
+        {
+            cost[i][i] = 0;
+
+            for (int j = i + 1; j <= strlen(l); ++j)
+                cost[i][j] = cost[i][j - 1] + (j - i) * f[l[j - 1]];
+        }
     }
 
     pair<uint8_t, int32_t> solve_(uint8_t ik, uint8_t il)
@@ -50,7 +45,7 @@ public:
         for (uint8_t ib = il; l[ib++] != 0;)
         {
             auto nr = solve_(ik + 1, ib);
-            auto cst = cost(il, ib) + nr.second;
+            int32_t cst = cost[il][ib] + nr.second;
 
             if (cst < r.second)
             {
@@ -68,7 +63,7 @@ public:
 
         vector<string> v(nkeys);
 
-        for(int ik = 0, il = 0; ik < nkeys; ++ik)
+        for (int ik = 0, il = 0; ik < nkeys; ++ik)
         {
             auto newil = il + d[ik][il].first;
             v[ik] = string(l + il, l + newil);
