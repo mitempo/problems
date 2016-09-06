@@ -38,7 +38,7 @@ public:
         fill_n((remove_all_extents<decltype(dcost)>::type *)dcost, extent<decltype(dcost), 0>::value * extent<decltype(dcost), 1>::value, -1);
     }
 
-    pair<vector<uint16_t>, int32_t> solve(uint8_t ik, uint8_t il)
+    pair<vector<uint16_t>, int32_t> solve_(uint8_t ik, uint8_t il)
     {
         auto& r = d[ik][il];
         if (r.second != -1) return r;
@@ -49,7 +49,7 @@ public:
 
         for (uint8_t ib = il; l[ib++] != 0;)
         {
-            auto nr = solve(ik + 1, ib);
+            auto nr = solve_(ik + 1, ib);
             int32_t cst = cost(il, ib) + nr.second;
 
             if (cst < r.second)
@@ -61,6 +61,11 @@ public:
         }
 
         return r;
+    }
+
+    pair<vector<uint16_t>, int32_t> solve()
+    {
+        return solve_(0, 0);
     }
 };
 
@@ -88,7 +93,7 @@ int main()
 
         cout << "Keypad #" << i << ":" << endl;
 
-        vector<uint16_t> solution = solver(keys.size(), letters.c_str(), f).solve(0, 0).first;
+        vector<uint16_t> solution = solver(keys.size(), letters.c_str(), f).solve().first;
 
         for (size_t i = 0; i < solution.size(); ++i)
             cout << keys[i] << ": " << string(letters.c_str() + (solution[i] >> 8), letters.c_str() + (solution[i] & 255)) << endl;
