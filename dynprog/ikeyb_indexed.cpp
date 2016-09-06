@@ -15,8 +15,8 @@ class solver
     const char *l;
     const int *f;
 
-    pair<vector<uint16_t>, long> d[256][256];
-    long dcost[256][256];
+    pair<vector<uint16_t>, long> d[100][100];
+    long dcost[100][100];
 
     long cost(uint8_t ib, uint8_t ie)
     {
