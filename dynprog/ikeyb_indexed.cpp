@@ -1,4 +1,3 @@
-#include <iostream>
 #include <string>
 #include <utility>
 #include <vector>
@@ -6,6 +5,7 @@
 #include <cstdint>
 #include <cstring>
 #include <type_traits>
+#include <cstdio>
 
 using namespace std;
 
@@ -75,32 +75,33 @@ public:
 int main()
 {
     int t;
-    cin >> t;
+    scanf("%d", &t);
 
     for (int i = 1; i <= t; ++i)
     {
         int k, l;
-        cin >> k >> l;
+        scanf("%d%d\n", &k, &l);
 
-        string keys, letters;
-        cin >> keys >> letters;
+        char keys[100], letters[100];
+        scanf("%s\n", keys);
+        scanf("%s\n", letters);
 
         int f[256];
 
         for (int j = 0; j < l; ++j)
         {
             int v;
-            cin >> v;
+            scanf("%d\n", &v);
             f[letters[j]] = v;
         }
 
-        cout << "Keypad #" << i << ":" << endl;
+        printf("Keypad #%d:\n", i);
 
-        vector<string> solution = solver(keys.size(), letters.c_str(), f).solve();
+        vector<string> solution = solver(strlen(keys), letters, f).solve();
 
         for (size_t i = 0; i < solution.size(); ++i)
-            cout << keys[i] << ": " << solution[i] << endl;
+            printf("%c: %s\n", keys[i], solution[i].c_str());
 
-        cout << endl;
+        printf("\n");
     }
 }
