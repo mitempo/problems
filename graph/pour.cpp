@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <utility>
 #include <queue>
+#include <set>
 
 using namespace std;
 
@@ -12,6 +13,7 @@ struct state
     int b;
 
     bool operator==(const state& other) const { return a == other.a && b == other.b; }
+    bool operator<(const state& other) const { return a < other.a || a == other.a && b < other.b; }
 };
 
 int ha;
@@ -23,7 +25,7 @@ bool isfinal(const state& s)
     return s.a == c || s.b == c;
 }
 
-vector<state> v;
+set<state> v;
 queue<pair<state, int>> q;
 
 int solve()
@@ -35,10 +37,10 @@ int solve()
 
         q.pop();
 
-        if (find(v.cbegin(), v.cend(), s) != v.cend())
+        if (v.find(s) != v.cend())
             continue;
 
-        v.push_back(s);
+        v.insert(s);
 
         if (isfinal(s)) return d;
 
