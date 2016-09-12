@@ -52,7 +52,7 @@ int solve()
         int m = min(s.a, hb - s.b);
         if (m != 0) q.push(make_pair(state{s.a - m, s.b + m}, d + 1));
         m = min(s.b, ha - s.a);
-        if (m != 0) q.push(make_pair(state{s.a + m, hb - m}, d + 1));
+        if (m != 0) q.push(make_pair(state{s.a + m, s.b - m}, d + 1));
     }
 
     return -1;
@@ -67,6 +67,8 @@ int main()
     {
        scanf("%d\n%d\n%d\n", &ha, &hb, &c);
 
+       v.clear();
+       q = decltype(q){};
        q.push(make_pair(state{0, 0}, 0));
        printf("%d\n", solve());
     }
