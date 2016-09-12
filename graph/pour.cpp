@@ -28,6 +28,12 @@ bool isfinal(const state& s)
 set<state> v;
 queue<pair<state, int>> q;
 
+void conditionally_push(state&& s, int d)
+{
+    if (v.find(s) == v.cend())
+        q.push({s, d});
+}
+
 int solve()
 {
     while (!q.empty())
@@ -36,23 +42,19 @@ int solve()
         int d = q.front().second;
 
         q.pop();
-
-        if (v.find(s) != v.cend())
-            continue;
-
         v.insert(s);
 
         if (isfinal(s)) return d;
 
-        if (s.a != 0) q.push(make_pair(state{0, s.b}, d + 1));
-        if (s.b != 0) q.push(make_pair(state{s.a, 0}, d + 1));
-        if (s.a != ha) q.push(make_pair(state{ha, s.b}, d + 1));
-        if (s.b != hb) q.push(make_pair(state{s.a, hb}, d + 1));
+        if (s.a != 0) conditionally_push({0, s.b}, d + 1);
+        if (s.b != 0) conditionally_push({s.a, 0}, d + 1);
+        if (s.a != ha) conditionally_push({ha, s.b}, d + 1);
+        if (s.b != hb) conditionally_push({s.a, hb}, d + 1);
 
         int m = min(s.a, hb - s.b);
-        if (m != 0) q.push(make_pair(state{s.a - m, s.b + m}, d + 1));
+        if (m != 0) conditionally_push({s.a - m, s.b + m}, d + 1);
         m = min(s.b, ha - s.a);
-        if (m != 0) q.push(make_pair(state{s.a + m, s.b - m}, d + 1));
+        if (m != 0) conditionally_push({s.a + m, s.b - m}, d + 1);
     }
 
     return -1;
