@@ -2,6 +2,7 @@
 #include <cstdio>
 #include <limits>
 #include <cstdint>
+#include <vector>
 
 using namespace std;
 
@@ -11,12 +12,17 @@ struct item
 {
     int cost;
     int power;
-
-    bool operator<(const item& other) { return cost > other.cost; }
 };
 
-int ocost[21];
-item items[21][21];
+struct box
+{
+    int ocost;
+    vector<item> items = vector<item>(21);
+
+    bool operator<(const box& other) { return ocost > other.ocost; }
+};
+
+box boxes[21];
 
 int d[21][1001];
 
@@ -38,8 +44,8 @@ int solverec(int i, int k)
 
     int maxp = solverec(i + 1, k);
 
-    for (int j = k - ocost[i]; j >= 0; --j)
-        maxp = max(maxp, d[i][j] + solverec(i + 1, k - ocost[i] - j));
+    for (int j = k - boxes[i].ocost; j >= 0; --j)
+        maxp = max(maxp, d[i][j] + solverec(i + 1, k - boxes[i].ocost - j));
 
     return maxp;
 }
@@ -49,21 +55,20 @@ void solve()
     scanf("%d %d %d", &n, &m, &k);
 
     for (int i = 0; i < n; ++i)
-        scanf("%d", ocost + i);
+        scanf("%d", &boxes[i].ocost);
 
     for (int i = 0; i < n; ++i)
     for (int j = 0; j < m; ++j)
-        scanf("%d", &items[i][j].cost);
+        scanf("%d", &boxes[i].items[j].cost);
 
     for (int i = 0; i < n; ++i)
     for (int j = 0; j < m; ++j)
-        scanf("%d", &items[i][j].power);
+        scanf("%d", &boxes[i].items[j].power);
+
+    sort(boxes, boxes + n);
 
     for (int i = 0; i < n; ++i)
-    {
-        sort(items[i], items[i] + n);
-        solvebox(items[i], d[i]);
-    }
+        solvebox(&boxes[i].items[0], d[i]);
 
     printf("%d\n", solverec(0, k));
 }
