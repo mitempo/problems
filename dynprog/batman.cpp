@@ -1,7 +1,5 @@
 #include <algorithm>
 #include <cstdio>
-#include <limits>
-#include <cstdint>
 #include <vector>
 
 using namespace std;
@@ -18,13 +16,12 @@ struct box
 {
     int ocost;
     vector<item> items = vector<item>(21);
-
-    bool operator<(const box& other) { return ocost > other.ocost; }
 };
 
 box boxes[21];
 
 int d[21][1001];
+int outerd[21][1001];
 
 void solvebox(item *itemz, int *dbox)
 {
@@ -38,16 +35,23 @@ void solvebox(item *itemz, int *dbox)
     }
 }
 
-int solverec(int i, int k)
+void solve_outer()
 {
-    if (i >= n || k <= 0) return 0;
+    fill(outerd[0], outerd[0] + boxes[0].ocost, 0);
 
-    int maxp = solverec(i + 1, k);
+    if (boxes[0].ocost < k)
+        copy(d[0], d[0] + k + 1 - boxes[0].ocost, outerd[0] + boxes[0].ocost);
 
-    for (int j = k - boxes[i].ocost; j >= 0; --j)
-        maxp = max(maxp, d[i][j] + solverec(i + 1, k - boxes[i].ocost - j));
+    for (int i = 1; i < n; ++i)
+    {
+        for (int l = 0; l <= k; ++l)
+        {
+            outerd[i][l] = outerd[i - 1][l];
 
-    return maxp;
+            for (int j = l - boxes[i].ocost; j >= 0; --j)
+                outerd[i][l] = max(outerd[i][l], d[i][j] + outerd[i-1][l - boxes[i].ocost - j]);
+        }
+    }
 }
 
 void solve()
@@ -65,12 +69,11 @@ void solve()
     for (int j = 0; j < m; ++j)
         scanf("%d", &boxes[i].items[j].power);
 
-    sort(boxes, boxes + n);
-
     for (int i = 0; i < n; ++i)
         solvebox(&boxes[i].items[0], d[i]);
 
-    printf("%d\n", solverec(0, k));
+    solve_outer();
+    printf("%d\n", outerd[n-1][k]);
 }
 
 int main()
