@@ -5,24 +5,11 @@
 #include <string>
 #include <limits>
 #include <algorithm>
+#include <vector>
 
 using namespace std;
 
 using ulong = unsigned long;
-
-string to_str(ulong n)
-{
-    char buf[40];
-    snprintf(buf, sizeof(buf)/sizeof(*buf), "%lu", n);
-    return buf;
-}
-
-ulong to_num(const string& s)
-{
-    ulong n;
-    sscanf(s.c_str(), "%lu", &n);
-    return n;
-}
 
 string first_half(const string& s)
 {
@@ -36,22 +23,15 @@ string mid(const string& s)
 
 string increment(const string& s)
 {
-    return to_str(to_num(s) + 1);
+    return to_string(stoul(s) + 1);
 }
 
 string decrement(const string& s)
 {
-    return to_str(to_num(s) - 1);
+    return to_string(stoul(s) - 1);
 }
 
-string turn_to_palyndrome(const string& s, bool isEven)
-{
-    string reversed = isEven ? s : s.substr(0, s.size() - 1);
-    reverse(reversed.begin(), reversed.end());
-    return s + reversed;
-}
-
-string turn_to_palyndrome(const string& s, const string& mid)
+string mirror(const string& s, const string& mid)
 {
     string reversed = s;
     reverse(reversed.begin(), reversed.end());
@@ -63,7 +43,12 @@ vector<string> three_closest_palindromes(const string& s)
     string half = first_half(s);
     string m = mid(s);
     
-    return { turn_to_palyndrome(half, m), turn_to_palyndrome(increment(half), m), turn_to_palyndrome(decrement(half), m) };
+    return
+    {
+        mirror(half, m),
+        mirror(increment(half), m),
+        mirror(decrement(half), m)
+    };
 }
 
 int main()
@@ -71,17 +56,18 @@ int main()
     ulong n;
     scanf("%lu", &n);
     
-    string s = to_str(n);
+    string s = to_string(n);
 
-    long mindistance = numeric_limits<long>::max();
+    ulong mindistance = numeric_limits<ulong>::max();
     ulong resultcandidate;
     
     for (auto&& p : three_closest_palindromes(s))
     {
-        ulong nump = to_num(p);
-        if (abs(nump - n) < mindistance)
+        ulong nump = stoul(p);
+        ulong distance = max(nump, n) - min(nump, n);
+        if (distance < mindistance)
         {
-            mindistance = abs(nump - n);
+            mindistance = distance;
             resultcandidate = nump;
         }
     }
