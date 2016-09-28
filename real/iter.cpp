@@ -27,37 +27,39 @@ public:
         return !is_at_end() && !iter(*this).next().is_at_end();
     }
 
-    void next()
+    iter& next()
     {
-        if (is_at_end()) throw runtime_error();
+        if (is_at_end()) throw runtime_error("");
 
         next_();
         skipempty();
+
+        return *this;
     }
 
     void remove()
     {
-        // if (is_at_end()) throw runtime_error();
+        // if (is_at_end()) throw runtime_error("");
     }
 
     T& operator*()
     {
-        if (is_at_end()) throw runtime_error();
+        if (is_at_end()) throw runtime_error("");
         return *p;
     }
 
 private:
     vector<vector<T>> *_v;
 
-    using vvi = decltype(*_v)::iterator;
-    using vi = vector<T>::iterator;
+    typedef typename vector<vector<T>>::iterator vvi;
+    typedef typename vector<T>::iterator vi;
 
     vvi pv;
     vi p;
 
     void next_()
     {
-        if (pv == _v->end()) throw runtime_error();
+        if (pv == _v->end()) throw runtime_error("");
 
         if (p != pv->end())
             ++p;
@@ -73,17 +75,19 @@ private:
         while (pv != _v->end())
             if (p == pv->end())
                 next_();
+            else
+                return;
     }
 };
 
 int main()
 {
     vector<vector<int>> z = {
-       { 1, 2, 3 }
+       { 1, 2, 3 },
+       {},
        { 4, 5, 6 }
     };
 
-    iter p(z);
-
-    cout << *p;
+    for (iter<int> p(z); !p.is_at_end(); p.next())
+        cout << *p;
 }
