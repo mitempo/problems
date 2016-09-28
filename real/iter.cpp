@@ -3,6 +3,7 @@
 #include <vector>
 #include <iterator>
 #include <stdexcept>
+#include <functional>
 
 using namespace std;
 
@@ -10,7 +11,7 @@ template <typename T> class iter
 {
 public:
     iter(vector<vector<T>>& v) :
-        _v(&v),
+        _v(v),
         pv(v.begin()),
         p(v.empty() ? vi() : pv->begin())
     {
@@ -19,7 +20,7 @@ public:
 
     bool is_at_end()
     {
-        return pv == _v->end();
+        return pv == _v.get().end();
     }
 
     bool has_next()
@@ -49,7 +50,7 @@ public:
     }
 
 private:
-    vector<vector<T>> *_v;
+    reference_wrapper<vector<vector<T>>> _v;
 
     typedef typename vector<vector<T>>::iterator vvi;
     typedef typename vector<T>::iterator vi;
@@ -59,7 +60,7 @@ private:
 
     void next_()
     {
-        if (pv == _v->end()) throw runtime_error("");
+        if (pv == _v.get().end()) throw runtime_error("");
 
         if (p != pv->end())
             ++p;
@@ -72,7 +73,7 @@ private:
 
     void skipempty()
     {
-        while (pv != _v->end())
+        while (pv != _v.get().end())
             if (p == pv->end())
                 next_();
             else
