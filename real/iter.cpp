@@ -52,8 +52,8 @@ public:
 private:
     reference_wrapper<vector<vector<T>>> _v;
 
-    typedef typename vector<vector<T>>::iterator vvi;
-    typedef typename vector<T>::iterator vi;
+    using vvi = typename vector<vector<T>>::iterator;
+    using vi = typename vector<T>::iterator;
 
     vvi pv;
     vi p;
