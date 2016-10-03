@@ -8,12 +8,14 @@ public class Solver
     private string acronym;
     private Tuple<char, int>[] definition;
 
-    private int[,,] d = new int[160,160,160];
+    private int[,,] d;
 
     public Solver(string a, IEnumerable<string> defn)
     {
         acronym = a;
         definition = defn.SelectMany((e, i) => e.Select(c => Tuple.Create(c, i))).ToArray();
+
+        d = new int[a.Length + 1, definition.Length + 1, definition[definition.Length - 1].Item2 + 2];
 
         for (int i = 0; i < d.GetLength(0); ++i)
         for (int j = 0; j < d.GetLength(1); ++j)
