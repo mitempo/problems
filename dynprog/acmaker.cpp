@@ -35,7 +35,7 @@ int s(int ia, int id, int lastWordIndex)
     return r != -1
         ? r
         : r = s(ia, id - 1, lastWordIndex) +
-               (acronym[ia-1] == definition[id-1] && lastWordIndex - wordIndex[id-1] <= 1 ? s(ia - 1, id - 1, wordIndex[id-1]) : 0);
+              (acronym[ia-1] == definition[id-1] && lastWordIndex - wordIndex[id-1] <= 1 ? s(ia - 1, id - 1, wordIndex[id-1]) : 0);
 }
 
 int main()
@@ -62,11 +62,11 @@ int main()
 
             if (string(buf) == "LAST CASE") break;
 
-            transform(buf, buf + strlen(buf), buf, ::tolower);
+            for_each(buf, buf + strlen(buf), [](char& c){ c = (char)::tolower(c); });
 
             char *firstspace = strchr(buf, ' ');
             acronym = string(buf, firstspace);
-            definition = string(firstspace+1);
+            definition = string(firstspace + 1);
 
             for (auto&& s : stopwords)
                 for (size_t pos = definition.find(s); pos != string::npos; pos = definition.find(s, pos + 1))
@@ -74,6 +74,8 @@ int main()
                         continue;
                     else
                         fill_n(&definition[pos], s.size(), ' ');
+
+            definition.erase(0, definition.find_first_not_of(' '));
 
             wordIndex[0] = 0;
             for (int i = 1; i < definition.size(); ++i)
@@ -83,7 +85,7 @@ int main()
 
             int solution = s(acronym.size(), definition.size(), wordIndex[definition.size()-1] + 1);
 
-            transform(&acronym[0], &acronym[acronym.size()], &acronym[0], ::toupper);
+            for_each(&acronym[0], &acronym[acronym.size()], [](char& c){ c = (char)::toupper(c); });
 
             if (solution == 0)
                 printf("%s is not a valid abbreviation\n", acronym.c_str());
