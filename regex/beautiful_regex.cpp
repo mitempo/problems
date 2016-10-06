@@ -15,12 +15,12 @@ int match_here(const char *re, const char *p)
             if (match_here(re + 2, p))
                 return 1;
         }
-        while (*p++ == *re || *re == '.');
+        while (*p != 0 && (*p++ == *re || *re == '.'));
 
         return 0;
     }
 
-    return (*re == '.' || *re == *p) && match_here(++re, ++p);
+    return (*re == '.' && *p != 0 || *re == *p) && match_here(++re, ++p);
 }
 
 int match(const char *re, const char *p)
