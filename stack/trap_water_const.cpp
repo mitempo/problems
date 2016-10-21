@@ -18,31 +18,16 @@ int trap(vector<int>& height)
     
     while (ileft <= iright)
     {
-        int *pi;
-        int min;
-        int step;
+        int minh = min(lefth, righth);
+        int *pi = minh == lefth ? &ileft : &iright;
 
-        if (lefth <= righth)
+        if (height[*pi] <= minh)
         {
-            pi = &ileft;
-            min = lefth;
-            step = 1;
-        }
-        else
-        {
-            pi = &iright;
-            min = righth;
-            step = -1;
-        }
-        
-        if (height[*pi] <= min)
-        {
-            acc += min - height[*pi];
-            *pi += step;
+            acc += minh - height[*pi];
+            *pi += pi == &ileft ? 1 : -1;
         }
         else
             (pi == &ileft ? lefth : righth) = height[*pi];
-                
     }
 
     return acc;
