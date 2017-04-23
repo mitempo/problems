@@ -1,5 +1,5 @@
 // http://acm.timus.ru/problem.aspx?space=1&num=1033
-// Labyrinth
+// Labyrinth - solution via BFS
 
 #include <cstdio>
 #include <queue>
