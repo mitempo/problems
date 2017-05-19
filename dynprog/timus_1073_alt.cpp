@@ -23,9 +23,9 @@ int main()
 
         int minimum = numeric_limits<int>::max();
 
-        for (int i = 1; i <= k / 2; ++i)
+        for (int i = 1; i * i < k; ++i)
         {
-            int candidate = d[i] + d[k-i];
+            int candidate = 1 + d[k - i * i];
             if (candidate < minimum)
                 minimum = candidate;
         }
