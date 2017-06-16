@@ -1,4 +1,4 @@
-http://acm.timus.ru/problem.aspx?space=1&num=1353
+// http://acm.timus.ru/problem.aspx?space=1&num=1353
 
 #include <cstdio>
 #include <algorithm>
