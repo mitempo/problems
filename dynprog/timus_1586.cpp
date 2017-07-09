@@ -1,32 +1,21 @@
 // http://acm.timus.ru/problem.aspx?space=1&num=1586
 
-#include <cstdio>
+#include <iostream>
 #include <algorithm>
 #include <cassert>
+#include <cstdint>
+#include <numeric>
 
 using namespace std;
 
 bool is_compo[1000];
 
-long long cnt[100];
-long long cnt_next[100];
+uint32_t cnt[100];
+uint32_t cnt_next[100];
 
-long long normalize(long long& l)
+uint32_t add(uint32_t l1, uint32_t l2)
 {
-    l %= 1000000009;
-    return l;
-}
-
-void inc(long long& l)
-{
-    ++l;
-    if (l & 0xFF00000000000000) normalize(l);
-}
-
-void add(long long& l1, long long l2)
-{
-    l1 += l2;
-    normalize(l1);
+    return (l1 + l2) % 1000000009;
 }
 
 bool is_3prime(int i)
@@ -42,13 +31,13 @@ int main()
                 is_compo[j] = true;
 
     int n;
-    scanf("%d", &n);
+    cin >> n;
 
     assert(n >= 3 && n <= 10000);
 
     for (int i = 0; i < 1000; ++i)
         if (is_3prime(i))
-            inc(cnt[i % 100]);
+            cnt[i % 100] = add(cnt[i % 100], 1);
 
     for (int i = 4; i <= n; ++i)
     {
@@ -60,7 +49,7 @@ int main()
             {
                 int candidate = j % 100 * 10 + k;
                 if (!is_3prime(candidate)) continue;
-                add(cnt_next[candidate % 100], cnt[j]);
+                cnt_next[candidate % 100] = add(cnt_next[candidate % 100], cnt[j]);
             }
         }
 
@@ -68,9 +57,5 @@ int main()
         fill_n(cnt_next, 100, 0);
     }
 
-    long long s = 0;
-    for (int i = 0; i < 100; ++i)
-        add(s, cnt[i]);
-
-    printf("%lld", normalize(s));
+    cout << accumulate(cnt, cnt + 100, 0, add);
 }
