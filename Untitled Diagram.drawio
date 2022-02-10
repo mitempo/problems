@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-02-10T01:30:44.353Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" etag="oYz8j4s_0ZT4JHfpxHcI" version="16.5.5" type="github">
+<mxfile host="app.diagrams.net" modified="2022-02-10T08:42:05.367Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" etag="QPTUbBekWNPCJxm6sT2p" version="16.5.5" type="github">
   <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
@@ -16,10 +16,10 @@
         <mxCell id="Tg9toBIDy_47bG0WhnQ1-36" value="query text" style="align=left;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;fontStyle=2" vertex="1" parent="Tg9toBIDy_47bG0WhnQ1-35">
           <mxGeometry y="30" width="191" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="Tg9toBIDy_47bG0WhnQ1-38" value="&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; InputQuery: string&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;AddressDetected: bool&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; AmbiguousLocationResults: bool&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; PairwiseRankingOutput: bool&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;? QasClientId: string&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; OntologyVersion: string&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; FeatureTraceFlags: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; FeatureTraceFlagsEx: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; AtomicLocations: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; ComboLocatoins: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; WeakComboLocations: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; AddressLocations: unit32&lt;/span&gt;&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
-          <mxGeometry x="110" y="210" width="240" height="210" as="geometry" />
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-38" value="&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; InputQuery: string&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;AddressDetected: bool&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; AmbiguousLocationResults: bool&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; PairwiseRankingOutput: bool&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;? QasClientId: string&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; OntologyVersion: string&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; FeatureTraceFlags: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; FeatureTraceFlagsEx: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; AtomicLocations: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; ComboLocatoins: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; WeakComboLocations: uint32&lt;/span&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;span&gt;&amp;nbsp; &amp;nbsp; AddressLocations: unit32&lt;/span&gt;&lt;/div&gt;" style="rounded=1;arcSize=6;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="120" y="200" width="240" height="450" as="geometry" />
         </mxCell>
-        <mxCell id="Tg9toBIDy_47bG0WhnQ1-42" value="" style="edgeStyle=orthogonalEdgeStyle;fontSize=12;html=1;endArrow=ERone;endFill=1;rounded=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="Tg9toBIDy_47bG0WhnQ1-38" target="Tg9toBIDy_47bG0WhnQ1-32">
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-42" value="has" style="edgeStyle=orthogonalEdgeStyle;fontSize=12;html=1;endArrow=ERone;endFill=1;rounded=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;exitX=0;exitY=0.25;exitDx=0;exitDy=0;" edge="1" parent="1" source="Tg9toBIDy_47bG0WhnQ1-38" target="Tg9toBIDy_47bG0WhnQ1-32">
           <mxGeometry width="100" height="100" relative="1" as="geometry">
             <mxPoint x="100" y="580" as="sourcePoint" />
             <mxPoint x="70" y="140" as="targetPoint" />
@@ -27,6 +27,24 @@
               <mxPoint x="80" y="263" />
             </Array>
           </mxGeometry>
+        </mxCell>
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-44" value="&lt;div style=&quot;text-align: left&quot;&gt;LocationEntity&lt;/div&gt;" style="rounded=1;arcSize=33;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="440" y="55" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-46" value="contains" style="edgeStyle=entityRelationEdgeStyle;fontSize=12;html=1;endArrow=ERzeroToMany;startArrow=ERmandOne;rounded=0;" edge="1" parent="1" source="Tg9toBIDy_47bG0WhnQ1-31" target="Tg9toBIDy_47bG0WhnQ1-44">
+          <mxGeometry width="100" height="100" relative="1" as="geometry">
+            <mxPoint x="350" y="470" as="sourcePoint" />
+            <mxPoint x="450" y="370" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-48" value="&lt;div style=&quot;text-align: left&quot;&gt;LocationSourceType: string (only implicit)&lt;/div&gt;" style="rounded=1;arcSize=33;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="120" width="240" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-49" value="&lt;div style=&quot;text-align: left&quot;&gt;Confidence&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;MatchOffset&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;MatchLength&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;ComboLength&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="160" width="240" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-50" value="&lt;div style=&quot;text-align: left&quot;&gt;HighConfidenceAddressParse: bool&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;IgnoreTagsForGC: bool&lt;br&gt;&lt;/div&gt;" style="rounded=1;arcSize=10;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="480" y="270" width="240" height="80" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
