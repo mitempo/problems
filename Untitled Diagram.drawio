@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-02-10T09:19:41.288Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" etag="EBWaDf58IGEM8e545bVY" version="16.5.5" type="github">
+<mxfile host="app.diagrams.net" modified="2022-02-10T09:28:19.454Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36 Edg/97.0.1072.55" etag="cZHOLsTuIROPVpxQQsUd" version="16.5.5" type="github">
   <diagram id="R2lEEEUBdFMjLlhIrx00" name="Page-1">
     <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0" extFonts="Permanent Marker^https://fonts.googleapis.com/css?family=Permanent+Marker">
       <root>
@@ -149,6 +149,9 @@
         </mxCell>
         <mxCell id="Tg9toBIDy_47bG0WhnQ1-82" value="1" style="resizable=0;html=1;align=right;verticalAlign=bottom;" connectable="0" vertex="1" parent="Tg9toBIDy_47bG0WhnQ1-81">
           <mxGeometry x="1" relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Tg9toBIDy_47bG0WhnQ1-83" value="&lt;div style=&quot;text-align: left&quot;&gt;CenterLatitude (string)&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;CenterLongitude (string)&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;BBox (strings)&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;AbbreviatedName&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;IsoName&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;EntityId&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;SatoriId&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;VirtualDataPipelineId&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;RegionId&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;IataCode&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;VendorId&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;LocationType&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;GeoEntityDetail&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;MatchOffset: uint32&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;MatchLength: uint32&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;MatchesDisplayName: bool&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;&lt;br&gt;&lt;/div&gt;&lt;div style=&quot;text-align: left&quot;&gt;[WindowsTimeZoneID: string]&lt;/div&gt;" style="rounded=1;arcSize=3;whiteSpace=wrap;html=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="810" y="320" width="240" height="450" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
